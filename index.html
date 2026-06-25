@@ -1,98 +1,158 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "French Tech Fundraising 2026",
+  "schemaVersion": 1,
+  "description": "Interactive dashboard of French Tech fundraising rounds in 2026. B+D theme (dark header, warm parchment, gold accents, colorful sector bars). FR/EN language toggle. Compact filters. LinkedIn and careers links on each card. Data sourced from Eldorado.co."
+}
+</script>
 <html lang="fr">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>French Tech Fundraising 2026</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
-:root{color-scheme:light}*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F8FAFC;color:#1E293B}
-.header{background:#fff;border-bottom:1px solid #E2E8F0;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.flag{display:flex;height:24px;width:40px;border-radius:3px;overflow:hidden;flex-shrink:0}.flag div{flex:1}
-.title-row{display:flex;align-items:center;gap:10px}.title-text{font-size:17px;font-weight:700}.title-sub{font-size:12px;color:#64748B}
-.year-badge{background:#EFF6FF;color:#2563EB;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;border:1px solid #BFDBFE}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:16px 24px 8px}
-.stat{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px}
-.stat-label{font-size:11px;color:#64748B;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-.stat-value{font-size:24px;font-weight:800;margin-top:4px}.stat-sub{font-size:11px;color:#94A3B8;margin-top:2px}
-.chart-wrap{background:#fff;border:1px solid #E2E8F0;border-radius:10px;margin:0 24px 8px;padding:16px 20px}
-.chart-head{font-size:13px;font-weight:600;color:#374151;margin-bottom:12px}.chart-container{height:160px}
-.filters{display:flex;align-items:center;gap:8px;padding:10px 24px 6px;flex-wrap:wrap}
-.f-label{font-size:11px;font-weight:600;color:#94A3B8;white-space:nowrap}
-.pills{display:flex;gap:3px;background:#F1F5F9;padding:3px;border-radius:7px}
-.pill{padding:4px 10px;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#64748B;transition:all .15s;white-space:nowrap}
-.pill.active{background:#fff;color:#2563EB;box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:700}
-.fsel{padding:5px 8px;border:1px solid #E2E8F0;border-radius:6px;font-size:11px;color:#374151;background:#fff;cursor:pointer;outline:none}
-.search{padding:5px 10px;border:1px solid #E2E8F0;border-radius:6px;font-size:12px;background:#fff;outline:none;width:160px}
-.search:focus{border-color:#93C5FD}.f-count{margin-left:auto;font-size:11px;color:#94A3B8;white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;padding:8px 24px 24px}
-.card{background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:14px 14px 12px 18px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-.card:hover{border-color:#93C5FD;box-shadow:0 4px 14px rgba(37,99,235,.1);transform:translateY(-1px)}
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F9F6F0;color:#1A1208}
+
+/* HEADER */
+.header{background:#1A1208;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.flag{display:flex;height:20px;width:32px;border-radius:2px;overflow:hidden;flex-shrink:0}
+.flag div{flex:1}
+.title-row{display:flex;align-items:center;gap:10px}
+.title-text{font-size:15px;font-weight:700;color:#F9F6F0;letter-spacing:.5px}
+.title-sub{font-size:11px;color:#6B5A44}
+.header-right{display:flex;align-items:center;gap:10px}
+.lang-btn{background:transparent;border:1px solid #3A3020;color:#8C7A5E;font-size:11px;font-weight:600;padding:4px 11px;border-radius:3px;cursor:pointer;transition:all .15s}
+.lang-btn:hover{border-color:#C4973A;color:#C4973A}
+.year-badge{background:#C4973A;color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:3px;letter-spacing:.5px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:#E2D9C8;border-bottom:1px solid #E2D9C8}
+.stat{background:#F9F6F0;padding:14px 18px}
+.stat-label{font-size:10px;font-weight:700;color:#8C7A5E;text-transform:uppercase;letter-spacing:.6px}
+.stat-value{font-size:22px;font-weight:800;color:#1A1208;margin-top:4px}
+.stat-value.gold{color:#C4973A}
+.stat-sub{font-size:10px;color:#B0A08A;margin-top:2px}
+.stat-accent{height:2px;background:#C4973A;margin-top:8px;border-radius:1px}
+
+/* CHART */
+.chart-wrap{background:#fff;border-bottom:1px solid #E2D9C8;padding:16px 24px}
+.chart-head{font-size:12px;font-weight:600;color:#6B5A44;margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+.chart-container{height:150px}
+
+/* FILTERS */
+.filters{display:flex;align-items:center;gap:10px;padding:10px 24px;background:#F4EFE6;border-bottom:1px solid #E2D9C8;flex-wrap:wrap}
+.f-label{font-size:10px;font-weight:700;color:#8C7A5E;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.pills{display:flex;gap:2px;background:#E8DFD0;padding:3px;border-radius:3px}
+.pill{padding:4px 10px;border-radius:2px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:transparent;color:#6B5A44;transition:all .15s;white-space:nowrap}
+.pill.active{background:#C4973A;color:#fff}
+.fsel{padding:5px 8px;border:1px solid #D4C5A9;border-radius:3px;font-size:11px;color:#1A1208;background:#fff;cursor:pointer;outline:none;max-width:160px}
+.fsel:focus{border-color:#C4973A}
+.search{padding:5px 10px;border:1px solid #D4C5A9;border-radius:3px;font-size:11px;background:#fff;outline:none;width:150px}
+.search:focus{border-color:#C4973A}
+.f-count{margin-left:auto;font-size:11px;color:#8C7A5E;white-space:nowrap}
+
+/* GRID */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;padding:16px 24px 32px}
+
+/* CARDS */
+.card{background:#fff;border:1px solid #E2D9C8;border-radius:5px;padding:14px 14px 12px 16px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.card:hover{border-color:#C4973A;box-shadow:0 4px 16px rgba(196,151,58,.12);transform:translateY(-1px)}
 .card-bar{position:absolute;left:0;top:0;bottom:0;width:4px}
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:6px}
-.card-name{font-size:14px;font-weight:700}.card-amt{font-size:17px;font-weight:800;color:#2563EB;white-space:nowrap}
-.card-amt span{font-size:11px;font-weight:500;color:#94A3B8}
-.badges{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
-.b{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
-.b-stage{background:#F1F5F9;color:#475569}.b-month{background:#FDF4FF;color:#9333EA}.b-region{background:#F0FDF4;color:#16A34A}
-.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #F8FAFC}
-.fem{font-size:10px;color:#DB2777;background:#FDF2F8;padding:2px 5px;border-radius:3px}.model-tag{font-size:10px;color:#94A3B8}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-name{font-size:14px;font-weight:700;color:#1A1208}
+.card-amt{font-size:18px;font-weight:800;color:#C4973A;white-space:nowrap}
+.card-amt span{font-size:10px;font-weight:500;color:#B0A08A}
+.badges{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap;align-items:center}
+.b{display:inline-flex;align-items:center;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:600}
+.b-stage{background:#F4EFE6;color:#6B5A44;border:1px solid #D4C5A9}
+.b-month{background:#1A120810;color:#6B5A44;border:1px solid #D4C5A9}
+.b-fem{background:#FFF8EC;color:#C4973A;border:1px solid #E8D5A3}
+
+/* CARD FOOTER */
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid #F4EFE6}
+.card-region{font-size:10px;color:#8C7A5E}
+.card-links{display:flex;gap:5px}
+.link-btn{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:3px;font-size:10px;font-weight:700;text-decoration:none;border:1px solid;transition:all .15s;cursor:pointer}
+.link-li{color:#0A66C2;border-color:#0A66C2;background:#fff}
+.link-li:hover{background:#0A66C2;color:#fff}
+.link-careers{color:#C4973A;border-color:#C4973A;background:#fff}
+.link-careers:hover{background:#C4973A;color:#fff}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:48px 24px;color:#8C7A5E;grid-column:1/-1}
+
+/* MODAL OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(26,18,8,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:14px;width:100%;max-width:580px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.mh{padding:18px 20px 0;border-bottom:1px solid #F1F5F9}
-.mh-top{display:flex;align-items:flex-start;justify-content:space-between}
-.m-name{font-size:20px;font-weight:800}.m-amt{font-size:22px;font-weight:800;color:#2563EB}
-.m-close{background:#F1F5F9;border:none;border-radius:6px;padding:5px 9px;cursor:pointer;font-size:14px;color:#64748B}
-.m-badges{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 0}
-.mb{display:inline-flex;align-items:center;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:500}
-.mtabs{display:flex}.mtab{padding:9px 14px;border:none;background:none;cursor:pointer;font-size:12px;font-weight:500;color:#64748B;border-bottom:2px solid transparent}
-.mtab.active{color:#2563EB;border-bottom-color:#2563EB;font-weight:700}
-.mbody{overflow-y:auto;padding:18px 20px;flex:1}
-.desc{background:#F8FAFC;border-radius:8px;padding:13px;font-size:13px;color:#475569;line-height:1.6}
-.igrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.iitem label{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:3px}
-.iitem p{font-size:13px;font-weight:500}
-.inv-sec{margin-top:14px}.inv-sec label{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:7px}
-.inv-pills{display:flex;flex-wrap:wrap;gap:5px}.inv-pill{background:#F8FAFC;border:1px solid #E2E8F0;padding:3px 9px;border-radius:20px;font-size:11px;color:#374151}
-.src{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#2563EB;margin-top:12px;text-decoration:none}
-.job-links{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.jbtn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;font-size:11px;font-weight:600;text-decoration:none;border:none;cursor:pointer}
-.jbtn-wttj{background:#FF3C3C;color:#fff}.jbtn-li{background:#0A66C2;color:#fff}.jbtn-gen{background:#F1F5F9;color:#374151;border:1px solid #E2E8F0}
-.jcard{border:1px solid #E2E8F0;border-radius:8px;padding:12px;margin-bottom:8px}
-.jcard-title{font-size:13px;font-weight:700}
-.jcard-meta{font-size:11px;color:#64748B;margin-top:3px;display:flex;gap:10px;flex-wrap:wrap}
-.jcard-desc{font-size:12px;color:#475569;margin-top:7px;line-height:1.5}
-.j-note{font-size:10px;color:#94A3B8;margin-bottom:10px;font-style:italic}
-.jempty{text-align:center;padding:28px;color:#94A3B8;font-size:13px}
-.empty-state{text-align:center;padding:48px 24px;color:#94A3B8;grid-column:1/-1}
-.loading{text-align:center;padding:60px;color:#94A3B8;grid-column:1/-1}
-@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}.filters{gap:6px}}
+.modal{background:#F9F6F0;border-radius:8px;width:100%;max-width:560px;max-height:88vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(26,18,8,.35);border:1px solid #E2D9C8}
+
+/* MODAL HEADER */
+.mh{padding:20px 22px 16px;border-bottom:1px solid #E2D9C8;background:#fff}
+.mh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.m-name{font-size:20px;font-weight:800;color:#1A1208}
+.m-amt{font-size:20px;font-weight:800;color:#C4973A;white-space:nowrap}
+.m-close{background:#F4EFE6;border:1px solid #D4C5A9;border-radius:4px;padding:5px 10px;cursor:pointer;font-size:14px;color:#6B5A44;transition:all .15s}
+.m-close:hover{background:#E2D9C8}
+.m-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}
+.mb{display:inline-flex;align-items:center;padding:3px 9px;border-radius:3px;font-size:11px;font-weight:600}
+
+/* MODAL BODY */
+.mbody{overflow-y:auto;padding:20px 22px;flex:1}
+.desc{background:#fff;border:1px solid #E2D9C8;border-radius:5px;padding:14px;font-size:13px;color:#4A3C2C;line-height:1.65;border-left:3px solid #C4973A}
+.igrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.iitem label{font-size:10px;font-weight:700;color:#8C7A5E;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px}
+.iitem p{font-size:13px;font-weight:600;color:#1A1208}
+.inv-sec{margin-top:16px}
+.inv-sec label{font-size:10px;font-weight:700;color:#8C7A5E;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px}
+.inv-pills{display:flex;flex-wrap:wrap;gap:5px}
+.inv-pill{background:#fff;border:1px solid #D4C5A9;padding:3px 10px;border-radius:20px;font-size:11px;color:#4A3C2C}
+.m-links{display:flex;gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid #E2D9C8}
+.m-link-btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:4px;font-size:12px;font-weight:700;text-decoration:none;border:1px solid;transition:all .15s}
+.m-link-li{color:#0A66C2;border-color:#0A66C2;background:#fff}
+.m-link-li:hover{background:#0A66C2;color:#fff}
+.m-link-careers{color:#C4973A;border-color:#C4973A;background:#fff}
+.m-link-careers:hover{background:#C4973A;color:#fff}
+.m-src{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#8C7A5E;margin-left:auto;align-self:center}
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="title-row">
-    <div class="flag"><div style="background:#002395"></div><div style="background:#EEE"></div><div style="background:#ED2939"></div></div>
-    <div><div class="title-text">French Tech Fundraising</div><div class="title-sub">Levées de fonds · Source: Eldorado.co</div></div>
+    <div class="flag"><div style="background:#002395"></div><div style="background:#EEEEEE"></div><div style="background:#ED2939"></div></div>
+    <div>
+      <div class="title-text">French Tech Fundraising</div>
+      <div class="title-sub" id="headerSub"></div>
+    </div>
   </div>
-  <div class="year-badge">2026 Dashboard</div>
+  <div class="header-right">
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()"></button>
+    <span class="year-badge">2026</span>
+  </div>
 </div>
+
 <div class="stats" id="statsBar"></div>
+
 <div class="chart-wrap">
-  <div class="chart-head">Montants levés par mois (M€) — cliquez une barre pour filtrer</div>
+  <div class="chart-head" id="chartHead"></div>
   <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
 </div>
+
 <div class="filters">
-  <span class="f-label">Mois</span>
+  <span class="f-label" id="filterMonthLabel"></span>
   <div class="pills" id="monthPills"></div>
-  <select class="fsel" id="sectorF"><option value="">Tous les secteurs</option></select>
-  <select class="fsel" id="stageF"><option value="">Tous les stades</option></select>
-  <select class="fsel" id="regionF"><option value="">Toutes les régions</option></select>
-  <input class="search" id="searchIn" placeholder="🔍 Rechercher..."/>
+  <select class="fsel" id="sectorF"></select>
+  <select class="fsel" id="stageF"></select>
+  <select class="fsel" id="regionF"></select>
+  <input class="search" id="searchIn"/>
   <span class="f-count" id="fCount"></span>
 </div>
-<div class="grid" id="grid"><div class="loading">Chargement des données…</div></div>
+
+<div class="grid" id="grid"></div>
+
 <div class="overlay" id="overlay" onclick="closeOverlay(event)">
   <div class="modal">
     <div class="mh">
@@ -101,168 +161,440 @@
         <button class="m-close" onclick="closeModal()">✕</button>
       </div>
       <div class="m-badges" id="mBadges"></div>
-      <div class="mtabs">
-        <button class="mtab active" onclick="switchTab('ov',this)">Vue d'ensemble</button>
-        <button class="mtab" onclick="switchTab('jobs',this)">💼 Jobs</button>
-      </div>
     </div>
-    <div class="mbody">
-      <div id="tabOv"></div>
-      <div id="tabJobs" style="display:none"></div>
-    </div>
+    <div class="mbody" id="mBody"></div>
   </div>
 </div>
+
 <script>
-// Monthly summary (from Eldorado.co — update alongside companies.json each month)
-const MONTH_META = {
-  1:{name:'Janvier',total:540.7,deals:29},
-  2:{name:'Février',total:438.6,deals:35},
-  3:{name:'Mars',   total:1735, deals:35},
-  4:{name:'Avril',  total:659,  deals:37},
-  5:{name:'Mai',    total:440,  deals:31}
+// ── LANGUAGE ──────────────────────────────────────────────
+let lang = 'fr';
+
+const LANG = {
+  fr: {
+    langBtn: '🇬🇧 English',
+    subtitle: 'Levées de fonds · Source: Eldorado.co',
+    statTotal: 'Total Levé', statAvg: 'Ticket Moyen', statTop: 'Secteur Leader', statFem: 'Équipes ♀',
+    statSub1: n => `${n} entreprises`, statSub2: 'Source: Eldorado.co', statSub3: 'par montants', statSub4: p => `${p}% des opérations`,
+    chartTitle: 'Montants levés par mois (M€) — cliquez une barre pour filtrer',
+    filterMonth: 'Mois',
+    allMonths: 'Tous', allSectors: 'Tous les secteurs', allStages: 'Tous les stades', allRegions: 'Toutes les régions',
+    searchPH: '🔍 Rechercher...',
+    results: n => `${n} résultat${n !== 1 ? 's' : ''}`,
+    noResults: 'Aucune entreprise pour ces filtres.',
+    fStage: 'Stade', fAmount: 'Montant', fRegion: 'Région', fModel: 'Modèle', fSector: 'Secteur', fMonth: 'Mois',
+    fInvestors: 'Investisseurs',
+    src: '↗ Source: Eldorado.co',
+    female: '♀ Fondatrice', femaleModal: '♀ Co-fondée par une femme',
+    linkedin: 'LinkedIn', careers: 'Carrières',
+    months: ['','Janvier','Février','Mars','Avril','Mai'],
+    monthsShort: ['Tous','Jan','Fév','Mar','Avr','Mai'],
+    sectors: {'Intelligence Artificielle':'Intelligence Artificielle','Deep Tech':'Deep Tech','Biotech':'Biotech','Santé / MedTech':'Santé / MedTech','Software / SaaS':'Software / SaaS','Énergie':'Énergie','Cybersécurité':'Cybersécurité','FinTech':'FinTech','LegalTech':'LegalTech','Aérospatial':'Aérospatial','Aérospatial / IA':'Aérospatial / IA','Assurance':'Assurance','Gaming':'Gaming','Cleantech':'Cleantech'},
+    stages: {'Seed':'Seed','Série A':'Série A','Série B':'Série B','Série C':'Série C','Série D':'Série D','Série E':'Série E','Growth Equity':'Growth Equity','Late Stage':'Late Stage'},
+    models: {'BtoB':'BtoB','BtoC':'BtoC','BtoBtoC':'BtoBtoC','R&D':'R&D'}
+  },
+  en: {
+    langBtn: '🇫🇷 Français',
+    subtitle: 'Fundraising rounds · Source: Eldorado.co',
+    statTotal: 'Total Raised', statAvg: 'Average Deal', statTop: 'Top Sector', statFem: 'Female-founded',
+    statSub1: n => `${n} companies`, statSub2: 'Source: Eldorado.co', statSub3: 'by amount', statSub4: p => `${p}% of deals`,
+    chartTitle: 'Monthly fundraising (M€) — click a bar to filter',
+    filterMonth: 'Month',
+    allMonths: 'All', allSectors: 'All sectors', allStages: 'All stages', allRegions: 'All regions',
+    searchPH: '🔍 Search...',
+    results: n => `${n} result${n !== 1 ? 's' : ''}`,
+    noResults: 'No companies match your filters.',
+    fStage: 'Stage', fAmount: 'Amount', fRegion: 'Region', fModel: 'Model', fSector: 'Sector', fMonth: 'Month',
+    fInvestors: 'Investors',
+    src: '↗ Source: Eldorado.co',
+    female: '♀ Founder', femaleModal: '♀ Co-founded by a woman',
+    linkedin: 'LinkedIn', careers: 'Careers',
+    months: ['','January','February','March','April','May'],
+    monthsShort: ['All','Jan','Feb','Mar','Apr','May'],
+    sectors: {'Intelligence Artificielle':'Artificial Intelligence','Deep Tech':'Deep Tech','Biotech':'Biotech','Santé / MedTech':'Health / MedTech','Software / SaaS':'Software / SaaS','Énergie':'Energy','Cybersécurité':'Cybersecurity','FinTech':'FinTech','LegalTech':'LegalTech','Aérospatial':'Aerospace','Aérospatial / IA':'Aerospace / AI','Assurance':'Insurance','Gaming':'Gaming','Cleantech':'Cleantech'},
+    stages: {'Seed':'Seed','Série A':'Series A','Série B':'Series B','Série C':'Series C','Série D':'Series D','Série E':'Series E','Growth Equity':'Growth Equity','Late Stage':'Late Stage'},
+    models: {'BtoB':'B2B','BtoC':'B2C','BtoBtoC':'B2B2C','R&D':'R&D'}
+  }
 };
 
-const SC={'Intelligence Artificielle':'#7C3AED','Deep Tech':'#4338CA','Biotech':'#059669','Santé / MedTech':'#0891B2','Software / SaaS':'#2563EB','Énergie':'#D97706','Cybersécurité':'#DC2626','FinTech':'#10B981','LegalTech':'#EA580C','Aérospatial':'#0284C7','Assurance':'#6D28D9','Gaming':'#DB2777','Big Data':'#475569','Cleantech':'#16A34A'};
-function sc(s){for(const[k,v]of Object.entries(SC))if(s&&s.includes(k.split('/')[0].trim()))return v;return'#64748B';}
-function fmt(n){return n>=1000?(n/1000).toFixed(2)+' Md€':n+' M€';}
+function T(k){ return LANG[lang][k]; }
+function TS(k,v){ return (LANG[lang][k]||{})[v]||v; }
 
-let CO=[], aMonth=0, aSec='', aStage='', aReg='', aQ='', curC=null, chart=null;
-
-// Load data from data/companies.json
-fetch('data/companies.json')
-  .then(r=>r.json())
-  .then(data=>{CO=data; initFilters(); initChart(); renderAll();})
-  .catch(()=>{document.getElementById('grid').innerHTML='<div class="empty-state"><p>Erreur de chargement. Vérifiez que data/companies.json existe.</p></div>';});
-
-function filtered(){return CO.filter(c=>{
-  if(aMonth&&c.month!==aMonth)return false;
-  if(aSec&&c.sector!==aSec)return false;
-  if(aStage&&c.stage!==aStage)return false;
-  if(aReg&&c.region!==aReg)return false;
-  if(aQ){const q=aQ.toLowerCase();if(!c.name.toLowerCase().includes(q)&&!c.sector.toLowerCase().includes(q)&&!c.description.toLowerCase().includes(q))return false;}
-  return true;
-});}
-
-function renderStats(){
-  const cs=filtered(),tot=cs.reduce((s,c)=>s+c.amount,0),avg=cs.length?(tot/cs.length).toFixed(1):0;
-  const topS=Object.entries(cs.reduce((m,c)=>{m[c.sector]=(m[c.sector]||0)+c.amount;return m},{})).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
-  const femN=cs.filter(c=>c.femaleFounded).length;
-  document.getElementById('statsBar').innerHTML=`
-    <div class="stat"><div class="stat-label">Total Levé</div><div class="stat-value" style="color:#2563EB">${fmt(tot)}</div><div class="stat-sub">${cs.length} entreprises (filtrées)</div></div>
-    <div class="stat"><div class="stat-label">Ticket Moyen</div><div class="stat-value">${avg} M€</div><div class="stat-sub">Source: Eldorado.co</div></div>
-    <div class="stat"><div class="stat-label">Secteur Leader</div><div class="stat-value" style="font-size:14px;margin-top:8px">${topS.split('/')[0].trim()}</div><div class="stat-sub">par montants levés</div></div>
-    <div class="stat"><div class="stat-label">Équipes ♀</div><div class="stat-value">${femN}</div><div class="stat-sub">${cs.length?Math.round(femN/cs.length*100):0}% des opérations</div></div>`;
+function toggleLang(){
+  lang = lang === 'fr' ? 'en' : 'fr';
+  document.getElementById('headerSub').textContent = T('subtitle');
+  document.getElementById('langBtn').textContent = T('langBtn');
+  document.getElementById('chartHead').textContent = T('chartTitle');
+  document.getElementById('filterMonthLabel').textContent = T('filterMonth');
+  document.getElementById('searchIn').placeholder = T('searchPH');
+  rebuildMonthPills();
+  rebuildDropdowns();
+  renderAll();
+  if(curC) renderModal(curC);
 }
 
+// ── SECTOR COLORS ─────────────────────────────────────────
+const SC={'Intelligence Artificielle':'#7C3AED','Deep Tech':'#4338CA','Biotech':'#059669','Santé / MedTech':'#0891B2','Software / SaaS':'#2563EB','Énergie':'#D97706','Cybersécurité':'#DC2626','FinTech':'#10B981','LegalTech':'#EA580C','Aérospatial':'#0284C7','Aérospatial / IA':'#0284C7','Assurance':'#6D28D9','Gaming':'#DB2777','Cleantech':'#16A34A'};
+function sc(s){ for(const [k,v] of Object.entries(SC)) if(s&&s.startsWith(k.split('/')[0].trim())) return v; return '#8C7A5E'; }
+
+function fmt(n){ return n>=1000?(n/1000).toFixed(2)+' Md€':n+' M€'; }
+
+// ── COMPANY DATA ──────────────────────────────────────────
+const MTOTALS=[0,540.7,438.6,1735,659,440];
+const MDEALS=[0,29,35,35,37,31];
+
+const CO=[
+  {id:1,m:1,n:'Pennylane',a:175,st:'Série E',sec:'Software / SaaS',r:'Île-de-France',mo:'BtoB',f:false,inv:['Sequoia Capital','Meritech Capital','DST Global'],
+   desc:"Plateforme de comptabilité et gestion financière intégrée pour les PME. Champion de la FinTech BtoB française, associant cabinet comptable et outil SaaS en temps réel.",
+   descEN:"Integrated accounting and financial management platform for SMEs. Champion of French B2B FinTech, combining accounting firm services and a real-time SaaS tool.",
+   li:'pennylane',website:'https://www.pennylane.com/fr/carrieres'},
+  {id:2,m:1,n:'HARMATTAN AI',a:171.2,st:'Série B',sec:'Aérospatial / IA',r:'Île-de-France',mo:'BtoB',f:false,inv:['Safran','Thales','Bpifrance'],
+   desc:"Systèmes d'IA appliqués au spatial: gestion de constellations de satellites et valorisation de données pour clients institutionnels et défense.",
+   descEN:"AI systems applied to space: satellite constellation management and data monetisation for institutional and defence clients.",
+   li:'harmattan-ai',website:'https://harmattan-ai.com/careers'},
+  {id:3,m:1,n:'Sunlib',a:25,st:'Série A',sec:'Énergie',r:'PACA',mo:'BtoBtoC',f:true,inv:['Demeter','Bpifrance','50 Partners'],
+   desc:"Démocratise l'énergie solaire pour les particuliers et petits professionnels via des offres clés en main et des modèles hybrides.",
+   descEN:"Democratises solar energy for individuals and small businesses through turnkey offerings and hybrid financing models.",
+   li:'sunlib',website:'https://sunlib.fr/recrutement'},
+  {id:4,m:1,n:'Enodia Therapeutics',a:20.7,st:'Seed',sec:'Biotech',r:'Île-de-France',mo:'R&D',f:true,inv:['SistaFund','Bpifrance','Idinvest'],
+   desc:"Biopharmaceutique développant des thérapies pour des maladies sévères à forte intensité de R&D. Équipe fondatrice 100% féminine.",
+   descEN:"Biopharmaceutical company developing therapies for severe, R&D-intensive diseases. 100% female founding team.",
+   li:'enodia-therapeutics',website:'https://enodia-therapeutics.com/careers'},
+  {id:5,m:1,n:'Stoïk',a:20,st:'Série C',sec:'Cybersécurité',r:'Île-de-France',mo:'BtoB',f:false,inv:['BlackFin Capital','Andreessen Horowitz'],
+   desc:"AssurTech spécialisée dans la couverture du risque cyber pour les PME, combinant assurance et outils de prévention et détection des menaces.",
+   descEN:"AssurTech specialising in cyber risk coverage for SMEs, combining insurance with threat prevention and detection tools.",
+   li:'stoik',website:'https://stoik.io/careers'},
+  {id:6,m:1,n:'Mycophyto',a:16,st:'Série A',sec:'Biotech',r:'PACA',mo:'BtoB',f:true,inv:['Idinvest','Bpifrance','Go Capital'],
+   desc:"Biostimulants à base de champignons mycorhiziens pour améliorer la résilience des cultures et réduire les intrants chimiques en agriculture.",
+   descEN:"Mycorrhizal mushroom-based biostimulants to improve crop resilience and reduce chemical inputs in agriculture.",
+   li:'mycophyto',website:'https://mycophyto.fr/rejoindre-equipe'},
+  {id:7,m:1,n:'BrightHeart',a:11,st:'Série A',sec:'Santé / MedTech',r:'Île-de-France',mo:'BtoB',f:true,inv:['Elaia Partners','Bpifrance'],
+   desc:"IA pour l'analyse cardiaque fœtale, permettant une détection précoce des malformations cardiaques pendant la grossesse.",
+   descEN:"AI for foetal cardiac analysis, enabling early detection of heart malformations during pregnancy.",
+   li:'brightheart',website:'https://brightheart.ai/careers'},
+  {id:8,m:2,n:'DentalMonitoring',a:84,st:'Série E',sec:'Santé / MedTech',r:'Île-de-France',mo:'BtoB',f:false,inv:['General Atlantic','Korelya Capital','Bpifrance'],
+   desc:"Suivi orthodontique à distance par IA: patients photographient leurs dents quotidiennement, l'algorithme analyse la progression et notifie le praticien.",
+   descEN:"AI-powered remote orthodontic monitoring: patients photograph their teeth daily, the algorithm analyses progress and notifies the practitioner.",
+   li:'dentalmonitoring',website:'https://dental-monitoring.com/careers'},
+  {id:9,m:2,n:'Naboo',a:58.8,st:'Série C',sec:'Software / SaaS',r:'Île-de-France',mo:'BtoB',f:false,inv:['Eurazeo','Singular','Partech'],
+   desc:"Plateforme dédiée à l'organisation d'événements et séminaires d'entreprise: réservation de lieux, coordination logistique, gestion budgétaire unifiée.",
+   descEN:"Platform dedicated to organising corporate events and seminars: venue booking, logistics coordination, unified budget management.",
+   li:'naboo',website:'https://naboo.fr/jobs'},
+  {id:10,m:2,n:'Hummingbirds',a:50,st:'Série A',sec:'Software / SaaS',r:'Île-de-France',mo:'BtoB',f:false,inv:['Balderton Capital','Kima Ventures'],
+   desc:"Plateforme d'ambassadeurs internes pour activer les collaborateurs comme relais d'influence authentique sur les réseaux sociaux.",
+   descEN:"Internal ambassador platform to activate employees as authentic influence relays on social networks.",
+   li:'hummingbirds',website:'https://hummingbirds.co/careers'},
+  {id:11,m:2,n:'GitGuardian',a:42,st:'Série C',sec:'Cybersécurité',r:'Île-de-France',mo:'BtoB',f:false,inv:['Eurazeo','Sapphire Ventures','CapHorn Invest'],
+   desc:"Détection automatique de secrets (clés API, mots de passe, certificats) dans le code source et dépôts Git. Acteur référent du DevSecOps.",
+   descEN:"Automatic detection of secrets (API keys, passwords, certificates) in source code and Git repositories. A leading DevSecOps player.",
+   li:'gitguardian',website:'https://www.gitguardian.com/careers'},
+  {id:12,m:2,n:'Verley',a:32,st:'Série A',sec:'Deep Tech',r:'Île-de-France',mo:'BtoB',f:false,inv:['Serena','Bpifrance','Kima Ventures'],
+   desc:"Infrastructure technologique de nouvelle génération positionnée sur des verticales critiques à forte barrière d'entrée technologique.",
+   descEN:"Next-generation technology infrastructure positioned on critical verticals with high technological barriers to entry.",
+   li:'verley',website:'https://verley.io/careers'},
+  {id:13,m:3,n:'AMI Labs',a:890,st:'Seed',sec:'Intelligence Artificielle',r:'Île-de-France',mo:'BtoB',f:true,inv:['Cathay Innovation','Greycroft','HV Capital','Temasek','Bezos Expeditions','Bpifrance'],
+   desc:"Infrastructure d'IA pour applications avancées avec mémoire persistante et raisonnement. Cofondée par Yann LeCun et Pascale Fung. Plus grande levée Seed de l'histoire française.",
+   descEN:"AI infrastructure for advanced applications with persistent memory and reasoning. Co-founded by Yann LeCun and Pascale Fung. Largest Seed round in French history.",
+   li:'ami-labs',website:'https://amilabs.ai/careers'},
+  {id:14,m:3,n:'Pasqal',a:340,st:'Late Stage',sec:'Deep Tech',r:'Île-de-France',mo:'BtoB',f:false,inv:['Temasek','Saudi Aramco Ventures','ISAI','Bpifrance','Quanta Computer'],
+   desc:"Ordinateurs quantiques basés sur des atomes neutres. Acteur stratégique européen dans la course à la suprématie quantique.",
+   descEN:"Quantum computers based on neutral atoms. A strategic European player in the race for quantum supremacy.",
+   li:'pasqal',website:'https://www.pasqal.com/careers'},
+  {id:15,m:3,n:'Calogena',a:100,st:'Growth Equity',sec:'Énergie',r:'PACA',mo:'BtoB',f:false,inv:['Groupe Gorgé','SNEF','Banque des Territoires'],
+   desc:"Réacteurs nucléaires modulaires standardisés pour fournir de la chaleur bas carbone aux réseaux de chauffage urbain et applications industrielles.",
+   descEN:"Standardised modular nuclear reactors to supply low-carbon heat to district heating networks and industrial applications.",
+   li:'calogena',website:'https://calogena.com/careers'},
+  {id:16,m:3,n:'Alan',a:100,st:'Growth Equity',sec:'Assurance',r:'Île-de-France',mo:'BtoBtoC',f:false,inv:['Index Ventures','Belfius','Greenoaks Capital'],
+   desc:"Assurance santé digitale proposant complémentaire santé et services entièrement dématérialisés. Scale-up leader de la santé digitale en France.",
+   descEN:"Digital health insurance offering fully dematerialised complementary health coverage and services. France's leading digital health scale-up.",
+   li:'alan',website:'https://alan.com/jobs'},
+  {id:17,m:3,n:'Jimmy Energy',a:80,st:'Série B',sec:'Énergie',r:'Île-de-France',mo:'BtoB',f:true,inv:['Crédit Mutuel Impact','ADEME Investissement','Eren Groupe','Serena'],
+   desc:"Générateurs thermiques fondés sur la fission nucléaire pour que les sites industriels produisent de la chaleur décarbonée sans dépendre du réseau électrique.",
+   descEN:"Nuclear fission-based thermal generators enabling industrial sites to produce decarbonised heat without relying on the electricity grid.",
+   li:'jimmy-energy',website:'https://jimmy.energy/jobs'},
+  {id:18,m:3,n:'Waiv',a:30,st:'Série A',sec:'Software / SaaS',r:'Île-de-France',mo:'BtoB',f:true,inv:['Serena','Kima Ventures','Bpifrance'],
+   desc:"Plateforme de gestion de la mobilité collaborateurs: simplifie les remboursements de frais de transport et optimise les avantages mobilité.",
+   descEN:"Employee mobility management platform: simplifies transport expense reimbursements and optimises mobility benefits.",
+   li:'waiv',website:'https://waiv.fr/careers'},
+  {id:19,m:3,n:'Qevlar AI',a:22,st:'Série B',sec:'Cybersécurité',r:'Île-de-France',mo:'BtoB',f:false,inv:['Balderton Capital','Elaia Partners'],
+   desc:"Automatise les investigations de cybersécurité par IA pour les équipes SOC, réduisant significativement le temps de réponse aux incidents.",
+   descEN:"Automates cybersecurity investigations using AI for SOC teams, significantly reducing incident response time.",
+   li:'qevlar-ai',website:'https://qevlar.ai/careers'},
+  {id:20,m:3,n:'DeepIP',a:18,st:'Série B',sec:'Intelligence Artificielle',r:'Île-de-France',mo:'BtoB',f:false,inv:['Alven','Bpifrance'],
+   desc:"IA pour la propriété intellectuelle: analyse brevets, anticipe risques IP et aide les entreprises à construire leur stratégie de protection de l'innovation.",
+   descEN:"AI for intellectual property: analyses patents, anticipates IP risks and helps companies build their innovation protection strategy.",
+   li:'deepip',website:'https://deepip.com/careers'},
+  {id:21,m:4,n:'Aura Aero',a:340,st:'Série B',sec:'Aérospatial',r:'Occitanie',mo:'BtoB',f:false,inv:['SWEN Capital Partners','Eiffel Investment Group','Bpifrance','Raise'],
+   desc:"Constructeur d'avions régionaux électriques et hybrides. Développe l'ERA, avion 19 places à propulsion hybride-électrique pour révolutionner l'aviation régionale.",
+   descEN:"Builder of electric and hybrid regional aircraft. Developing the ERA, a 19-seat hybrid-electric aircraft to revolutionise regional aviation.",
+   li:'aura-aero',website:'https://aura-aero.com/careers'},
+  {id:22,m:4,n:'EVA',a:35,st:'Série B',sec:'Gaming',r:'Île-de-France',mo:'BtoC',f:true,inv:['Kima Ventures','Otium Capital'],
+   desc:"Plateforme d'esport et gaming social permettant aux joueurs de participer à des tournois en ligne avec des récompenses réelles.",
+   descEN:"Esports and social gaming platform allowing players to participate in online tournaments with real rewards.",
+   li:'eva-esport',website:'https://eva-esport.gg/careers'},
+  {id:23,m:4,n:'Agriodor',a:15,st:'Série B',sec:'Biotech',r:'Île-de-France',mo:'BtoB',f:true,inv:['Idinvest','Bpifrance','GSO Innovation'],
+   desc:"Biotech agronomique développant des solutions olfactives pour l'agriculture: attractifs et répulsifs naturels pour lutter contre les ravageurs sans pesticides.",
+   descEN:"Agronomic biotech developing olfactory solutions for agriculture: natural attractants and repellents to fight pests without pesticides.",
+   li:'agriodor',website:'https://agriodor.com/recrutement'},
+  {id:24,m:4,n:'Donecle',a:12,st:'Série B',sec:'Aérospatial',r:'Occitanie',mo:'BtoB',f:false,inv:['Innovacom','Bpifrance','Blast'],
+   desc:"Inspection automatisée d'avions par drones équipés de caméras HD et IA. Réduit le temps d'inspection de 4h à 15 minutes pour compagnies aériennes.",
+   descEN:"Automated aircraft inspection by drones equipped with HD cameras and AI. Reduces inspection time from 4 hours to 15 minutes for airlines.",
+   li:'donecle',website:'https://donecle.com/careers'},
+  {id:25,m:4,n:'HrFlow.ai',a:8,st:'Série A',sec:'Intelligence Artificielle',r:'Île-de-France',mo:'BtoB',f:false,inv:['Alven','Kima Ventures'],
+   desc:"API d'IA pour les RH: parse, enrichit et structure données de CV et offres d'emploi pour plateformes de recrutement et ATS.",
+   descEN:"AI API for HR: parses, enriches and structures CV and job offer data for recruitment platforms and ATS.",
+   li:'hrflow-ai',website:'https://hrflow.ai/careers'},
+  {id:26,m:4,n:'ROSI',a:7.4,st:'Série A',sec:'Cleantech',r:'Île-de-France',mo:'BtoB',f:true,inv:['Demeter','Bpifrance','GSO Innovation'],
+   desc:"Recycle les panneaux solaires en fin de vie pour récupérer matières premières critiques: silicium, argent et aluminium avec procédé industriel propriétaire.",
+   descEN:"Recycles end-of-life solar panels to recover critical raw materials: silicon, silver and aluminium using a proprietary industrial process.",
+   li:'rosi-solar',website:'https://rosi-solar.com/join-us'},
+  {id:27,m:4,n:'Univity',a:10,st:'Série A',sec:'Aérospatial',r:'Île-de-France',mo:'BtoB',f:false,inv:['Innovacom','SWEN Capital Partners'],
+   desc:"Logiciel de gestion des opérations aériennes (MRO) utilisant l'IA pour optimiser la maintenance des flottes et réduire les immobilisations d'avions.",
+   descEN:"Aircraft operations management software (MRO) using AI to optimise fleet maintenance and reduce aircraft downtime.",
+   li:'univity',website:'https://univity.aero/careers'},
+  {id:28,m:5,n:'LegalPlace',a:70,st:'Série C',sec:'LegalTech',r:'Île-de-France',mo:'BtoB',f:false,inv:['Eurazeo','Singular','Banque des Territoires'],
+   desc:"LegalTech de référence pour la création et gestion d'entreprise en ligne. A acquis Legalstart pour devenir le leader des services juridiques en ligne.",
+   descEN:"Reference LegalTech for online business creation and management. Acquired Legalstart to become the leader in online legal services.",
+   li:'legalplace',website:'https://www.legalplace.fr/recrutement'},
+  {id:29,m:5,n:'UroMems',a:51.2,st:'Série D',sec:'Santé / MedTech',r:'Auvergne-Rhône-Alpes',mo:'R&D',f:false,inv:['Seventure Partners','Bpifrance','Gobelin Capital'],
+   desc:"Dispositifs médicaux implantables actifs pour traiter l'incontinence urinaire avec technologie MEMS miniaturisée et stimulation électrique précise.",
+   descEN:"Active implantable medical devices to treat urinary incontinence with miniaturised MEMS technology and precise electrical stimulation.",
+   li:'uromems',website:'https://uromems.com/careers'},
+  {id:30,m:5,n:'Dust',a:35,st:'Série B',sec:'Intelligence Artificielle',r:'Île-de-France',mo:'BtoB',f:false,inv:['Sequoia Capital','Benchmark','Y Combinator'],
+   desc:"Plateforme d'agents IA sur mesure pour les entreprises: déployez des assistants IA connectés aux données internes sans code et avec contrôle total.",
+   descEN:"Custom AI agent platform for businesses: deploy AI assistants connected to internal data without code and with full control.",
+   li:'dust-tt',website:'https://dust.tt/careers'},
+  {id:31,m:5,n:'Pivot',a:35,st:'Série B',sec:'FinTech',r:'Île-de-France',mo:'BtoB',f:true,inv:['Eurazeo','Y Combinator','Singular'],
+   desc:"Système d'exploitation IA dédié aux achats pour équipes financières et procurement. Automatise workflows, rapprochement factures et conformité.",
+   descEN:"AI operating system dedicated to purchasing for finance and procurement teams. Automates workflows, invoice reconciliation and compliance.",
+   li:'pivot',website:'https://www.pivot.co/careers'},
+  {id:32,m:5,n:'Mantle8',a:31,st:'Série A',sec:'Énergie',r:'Auvergne-Rhône-Alpes',mo:'BtoB',f:false,inv:['Seventure Partners','Bpifrance','Demeter'],
+   desc:"Identification et exploitation de réservoirs naturels d'hydrogène blanc (géologique). Développe technologies de prospection et d'extraction.",
+   descEN:"Identification and exploitation of natural white (geological) hydrogen reservoirs. Develops prospecting and extraction technologies.",
+   li:'mantle8',website:'https://mantle8.com/careers'},
+  {id:33,m:5,n:'Otrera',a:17,st:'Série A',sec:'Santé / MedTech',r:'Île-de-France',mo:'BtoB',f:true,inv:['Elaia Partners','Bpifrance'],
+   desc:"Plateforme numérique dédiée à la santé des femmes: santé reproductive, ménopause et bien-être féminin.",
+   descEN:"Digital platform dedicated to women's health: reproductive health, menopause and female wellbeing.",
+   li:'otrera',website:'https://otrera.health/careers'},
+  {id:34,m:5,n:'Sêmeia',a:15,st:'Série A',sec:'Santé / MedTech',r:'Île-de-France',mo:'BtoB',f:false,inv:['Seventure Partners','Bpifrance'],
+   desc:"IA de diagnostic précoce des maladies chroniques à partir de données multimodales. Cible notamment les pathologies hépatiques et métaboliques.",
+   descEN:"AI for early diagnosis of chronic diseases from multimodal data. Targets hepatic and metabolic pathologies in particular.",
+   li:'semeia',website:'https://semeia.ai/careers'},
+  {id:35,m:5,n:'Sonomind',a:12,st:'Série A',sec:'Santé / MedTech',r:'Auvergne-Rhône-Alpes',mo:'BtoBtoC',f:false,inv:['Seventure Partners','Bpifrance'],
+   desc:"Thérapeutique digitale pour troubles du sommeil combinant psychothérapie cognitivo-comportementale et suivi par IA pour traiter l'insomnie chronique.",
+   descEN:"Digital therapeutic for sleep disorders combining cognitive-behavioural psychotherapy and AI monitoring to treat chronic insomnia.",
+   li:'sonomind',website:'https://sonomind.com/careers'},
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let aMonth=0, aSec='', aStage='', aReg='', aQ='', curC=null;
+
+function filtered(){
+  return CO.filter(c=>{
+    if(aMonth && c.m!==aMonth) return false;
+    if(aSec && c.sec!==aSec) return false;
+    if(aStage && c.st!==aStage) return false;
+    if(aReg && c.r!==aReg) return false;
+    if(aQ){ const q=aQ.toLowerCase(); if(!c.n.toLowerCase().includes(q)&&!c.sec.toLowerCase().includes(q)&&!(lang==='fr'?c.desc:c.descEN).toLowerCase().includes(q)) return false; }
+    return true;
+  });
+}
+
+// ── STATS ─────────────────────────────────────────────────
+function renderStats(){
+  const cs=filtered(), tot=cs.reduce((s,c)=>s+c.a,0), avg=cs.length?(tot/cs.length).toFixed(1):0;
+  const topS=Object.entries(cs.reduce((m,c)=>{m[c.sec]=(m[c.sec]||0)+c.a;return m},{})).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  const femN=cs.filter(c=>c.f).length, femP=cs.length?Math.round(femN/cs.length*100):0;
+  const topDisplay = topS!=='—' ? TS('sectors',topS).split('/')[0].trim() : '—';
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat"><div class="stat-label">${T('statTotal')}</div><div class="stat-value gold">${fmt(tot)}</div><div class="stat-sub">${T('statSub1')(cs.length)}</div><div class="stat-accent" style="width:100%"></div></div>
+    <div class="stat"><div class="stat-label">${T('statAvg')}</div><div class="stat-value">${avg} M€</div><div class="stat-sub">${T('statSub2')}</div><div class="stat-accent" style="width:60%"></div></div>
+    <div class="stat"><div class="stat-label">${T('statTop')}</div><div class="stat-value" style="font-size:14px;margin-top:6px">${topDisplay}</div><div class="stat-sub">${T('statSub3')}</div><div class="stat-accent" style="width:80%"></div></div>
+    <div class="stat"><div class="stat-label">${T('statFem')}</div><div class="stat-value">${femN}</div><div class="stat-sub">${T('statSub4')(femP)}</div><div class="stat-accent" style="width:${femP}%"></div></div>`;
+}
+
+// ── GRID ──────────────────────────────────────────────────
 function renderGrid(){
   const cs=filtered();
-  document.getElementById('fCount').textContent=`${cs.length} résultat${cs.length!==1?'s':''}`;
-  if(!cs.length){document.getElementById('grid').innerHTML='<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><p>Aucune entreprise pour ces filtres.</p></div>';return;}
+  document.getElementById('fCount').textContent=T('results')(cs.length);
+  if(!cs.length){ document.getElementById('grid').innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><p>${T('noResults')}</p></div>`; return; }
   document.getElementById('grid').innerHTML=cs.map(c=>{
-    const col=sc(c.sector);
+    const col=sc(c.sec), secLabel=TS('sectors',c.sec).split('/')[0].trim(), stLabel=TS('stages',c.st);
+    const amtInt=c.a>=1000, amtDisp=amtInt?(c.a/1000).toFixed(1)+' Md':c.a;
     return`<div class="card" onclick="openModal(${c.id})">
       <div class="card-bar" style="background:${col}"></div>
-      <div class="card-top"><div class="card-name">${c.name}</div><div class="card-amt">${c.amount>=1000?(c.amount/1000).toFixed(1)+' Md':c.amount}<span> M€</span></div></div>
+      <div class="card-top">
+        <div class="card-name">${c.n}</div>
+        <div class="card-amt">${amtDisp}<span> M€</span></div>
+      </div>
       <div class="badges">
-        <span class="b b-stage">${c.stage}</span>
-        <span class="b" style="background:${col}18;color:${col}">${c.sector.split('/')[0].trim()}</span>
-        <span class="b b-month">${c.monthName}</span>
+        <span class="b b-stage">${stLabel}</span>
+        <span class="b" style="background:${col}18;color:${col};border:1px solid ${col}30">${secLabel}</span>
+        <span class="b b-month">${T('months')[c.m]}</span>
+        ${c.f?`<span class="b b-fem">${T('female')}</span>`:''}
       </div>
       <div class="card-foot">
-        <span class="b b-region">📍 ${c.region}</span>
-        ${c.femaleFounded?'<span class="fem">♀ Fondatrice</span>':''}
-        <span class="model-tag">${c.model}</span>
+        <span class="card-region">📍 ${c.r}</span>
+        <div class="card-links" onclick="event.stopPropagation()">
+          <a class="link-btn link-li" href="https://www.linkedin.com/company/${c.li}" target="_blank">in ${T('linkedin')}</a>
+          <a class="link-btn link-careers" href="${c.website}" target="_blank">🔗 ${T('careers')}</a>
+        </div>
       </div>
     </div>`;
   }).join('');
 }
 
+// ── MODAL ─────────────────────────────────────────────────
 function openModal(id){
-  curC=CO.find(x=>x.id===id);if(!curC)return;
-  const c=curC,col=sc(c.sector);
-  document.getElementById('mName').textContent=c.name;
-  document.getElementById('mAmt').textContent=fmt(c.amount)+' · '+c.stage;
-  document.getElementById('mBadges').innerHTML=`
-    <span class="mb" style="background:${col}18;color:${col}">${c.sector}</span>
-    <span class="mb b-month">${c.monthName} 2026</span>
-    <span class="mb b-region">📍 ${c.region}</span>
-    ${c.femaleFounded?'<span class="mb" style="background:#FDF2F8;color:#DB2777">♀ Co-fondée par une femme</span>':''}`;
-  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
-  document.getElementById('tabOv').style.display='';document.getElementById('tabJobs').style.display='none';
-  renderOv(c);renderJobsDefault(c);
+  curC=CO.find(x=>x.id===id); if(!curC) return;
+  renderModal(curC);
   document.getElementById('overlay').classList.add('open');
 }
 
-function renderOv(c){
-  document.getElementById('tabOv').innerHTML=`
-    <div class="desc">${c.description}</div>
+function renderModal(c){
+  const col=sc(c.sec), stLabel=TS('stages',c.st), secLabel=TS('sectors',c.sec), moLabel=TS('models',c.mo);
+  document.getElementById('mName').textContent=c.n;
+  document.getElementById('mAmt').textContent=fmt(c.a)+' · '+stLabel;
+  document.getElementById('mBadges').innerHTML=`
+    <span class="mb" style="background:${col}18;color:${col}">${secLabel}</span>
+    <span class="mb b-month" style="background:#1A120810;color:#6B5A44;border:1px solid #D4C5A9">${T('months')[c.m]} 2026</span>
+    <span class="mb" style="background:#F4EFE6;color:#6B5A44;border:1px solid #D4C5A9">📍 ${c.r}</span>
+    ${c.f?`<span class="mb b-fem" style="background:#FFF8EC;color:#C4973A;border:1px solid #E8D5A3">${T('femaleModal')}</span>`:''}`;
+  document.getElementById('mBody').innerHTML=`
+    <div class="desc">${lang==='fr'?c.desc:c.descEN}</div>
     <div class="igrid">
-      <div class="iitem"><label>Stade</label><p>${c.stage}</p></div>
-      <div class="iitem"><label>Montant</label><p>${c.amount} M€</p></div>
-      <div class="iitem"><label>Région</label><p>${c.region}</p></div>
-      <div class="iitem"><label>Modèle</label><p>${c.model}</p></div>
-      <div class="iitem"><label>Secteur</label><p>${c.sector}</p></div>
-      <div class="iitem"><label>Mois</label><p>${c.monthName} 2026</p></div>
+      <div class="iitem"><label>${T('fStage')}</label><p>${stLabel}</p></div>
+      <div class="iitem"><label>${T('fAmount')}</label><p>${c.a} M€</p></div>
+      <div class="iitem"><label>${T('fRegion')}</label><p>${c.r}</p></div>
+      <div class="iitem"><label>${T('fModel')}</label><p>${moLabel}</p></div>
+      <div class="iitem"><label>${T('fSector')}</label><p>${secLabel}</p></div>
+      <div class="iitem"><label>${T('fMonth')}</label><p>${T('months')[c.m]} 2026</p></div>
     </div>
-    ${c.investors&&c.investors.length?`<div class="inv-sec"><label>Investisseurs</label><div class="inv-pills">${c.investors.map(i=>`<span class="inv-pill">${i}</span>`).join('')}</div></div>`:''}
-    <a href="https://eldorado.co" target="_blank" class="src">↗ Source: Eldorado.co</a>`;
+    ${c.inv.length?`<div class="inv-sec"><label>${T('fInvestors')}</label><div class="inv-pills">${c.inv.map(i=>`<span class="inv-pill">${i}</span>`).join('')}</div></div>`:''}
+    <div class="m-links">
+      <a class="m-link-btn m-link-li" href="https://www.linkedin.com/company/${c.li}" target="_blank">in ${T('linkedin')}</a>
+      <a class="m-link-btn m-link-careers" href="${c.website}" target="_blank">🔗 ${T('careers')}</a>
+      <span class="m-src">${T('src')}</span>
+    </div>`;
 }
 
-function renderJobsDefault(c){
-  const w=`https://www.welcometothejungle.com/fr/companies/${c.wttj}/jobs`;
-  const l=`https://www.linkedin.com/company/${c.linkedin}/jobs`;
-  document.getElementById('tabJobs').innerHTML=`
-    <div class="job-links">
-      <a class="jbtn jbtn-wttj" href="${w}" target="_blank">🌿 Welcome to the Jungle</a>
-      <a class="jbtn jbtn-li" href="${l}" target="_blank">in LinkedIn Jobs</a>
-    </div>
-    <div class="jempty"><div style="font-size:28px;margin-bottom:8px">💼</div><p>Cliquez un portail ci-dessus pour voir les offres en temps réel.</p></div>`;
+function closeOverlay(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); curC=null; }
+
+// ── FILTERS ───────────────────────────────────────────────
+function rebuildMonthPills(){
+  const ms=T('monthsShort');
+  document.getElementById('monthPills').innerHTML=ms.map((m,i)=>
+    `<button class="pill${aMonth===i?' active':''}" onclick="setMonth(${i},this)">${m}</button>`
+  ).join('');
 }
 
-function switchTab(t,btn){
-  document.querySelectorAll('.mtab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
-  document.getElementById('tabOv').style.display=t==='ov'?'':'none';
-  document.getElementById('tabJobs').style.display=t==='jobs'?'':'none';
-}
-function closeOverlay(e){if(e.target===document.getElementById('overlay'))closeModal();}
-function closeModal(){document.getElementById('overlay').classList.remove('open');curC=null;}
-
-function initFilters(){
-  const months=Object.entries(MONTH_META);
-  document.getElementById('monthPills').innerHTML=`<button class="pill active" onclick="setMonth(0,this)">Tous</button>`+months.map(([k,v])=>`<button class="pill" onclick="setMonth(${k},this)">${v.name}</button>`).join('');
+function rebuildDropdowns(){
+  // Sector
   const sf=document.getElementById('sectorF');
-  [...new Set(CO.map(c=>c.sector))].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sf.appendChild(o);});
-  sf.onchange=e=>{aSec=e.target.value;renderAll();};
+  const curSec=sf.value;
+  sf.innerHTML=`<option value="">${T('allSectors')}</option>`;
+  [...new Set(CO.map(c=>c.sec))].sort().forEach(s=>{
+    const o=document.createElement('option'); o.value=s; o.textContent=TS('sectors',s); if(s===curSec) o.selected=true; sf.appendChild(o);
+  });
+
+  // Stage
   const stf=document.getElementById('stageF');
-  ['Seed','Série A','Série B','Série C','Série D','Série E','Growth Equity','Late Stage'].forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;stf.appendChild(o);});
-  stf.onchange=e=>{aStage=e.target.value;renderAll();};
+  const curSt=stf.value;
+  stf.innerHTML=`<option value="">${T('allStages')}</option>`;
+  ['Seed','Série A','Série B','Série C','Série D','Série E','Growth Equity','Late Stage'].forEach(s=>{
+    const o=document.createElement('option'); o.value=s; o.textContent=TS('stages',s); if(s===curSt) o.selected=true; stf.appendChild(o);
+  });
+
+  // Region
   const rf=document.getElementById('regionF');
-  [...new Set(CO.map(c=>c.region))].sort().forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;rf.appendChild(o);});
-  rf.onchange=e=>{aReg=e.target.value;renderAll();};
-  document.getElementById('searchIn').oninput=e=>{aQ=e.target.value;renderAll();};
+  const curReg=rf.value;
+  rf.innerHTML=`<option value="">${T('allRegions')}</option>`;
+  [...new Set(CO.map(c=>c.r))].sort().forEach(r=>{
+    const o=document.createElement('option'); o.value=r; o.textContent=r; if(r===curReg) o.selected=true; rf.appendChild(o);
+  });
+
+  document.getElementById('searchIn').placeholder=T('searchPH');
 }
 
-function setMonth(i,btn){aMonth=Number(i);document.querySelectorAll('#monthPills .pill').forEach(p=>p.classList.remove('active'));btn.classList.add('active');renderAll();}
+function setMonth(i,btn){
+  aMonth=i;
+  document.querySelectorAll('#monthPills .pill').forEach((p,j)=>p.classList.toggle('active',j===i));
+  renderAll(); updateChart();
+}
 
+// ── CHART ─────────────────────────────────────────────────
+let chart=null;
 function initChart(){
-  const months=Object.values(MONTH_META);
   const ctx=document.getElementById('monthlyChart').getContext('2d');
-  chart=new Chart(ctx,{type:'bar',data:{
-    labels:months.map(m=>m.name),
-    datasets:[{label:'M€',data:months.map(m=>m.total),backgroundColor:months.map((_,i)=>i===2?'#2563EB':'#BFDBFE'),borderRadius:6,borderSkipped:false}]
-  },options:{responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const v=ctx.parsed.y,m=months[ctx.dataIndex];return v>=1000?`${(v/1000).toFixed(2)} Md€ — ${m.deals} deals`:`${v} M€ — ${m.deals} deals`;},title:ctx=>[ctx[0].label+' 2026']}}},
-    scales:{x:{grid:{display:false},ticks:{font:{size:12},color:'#64748B'}},y:{grid:{color:'#F1F5F9'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'Md':v+'M',color:'#94A3B8',font:{size:11}}}},
-    onClick:(e,els)=>{if(els.length){const idx=els[0].index+1;const btn=document.querySelectorAll('#monthPills .pill')[idx];setMonth(idx===aMonth?0:idx,idx===aMonth?document.querySelector('#monthPills .pill'):btn);}}}});
+  chart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:LANG.fr.months.slice(1),
+      datasets:[{
+        label:'M€',
+        data:MTOTALS.slice(1),
+        backgroundColor:['#E8D5A3','#E8D5A3','#C4973A','#E8D5A3','#E8D5A3'],
+        borderRadius:4,borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#1A1208',titleColor:'#F9F6F0',bodyColor:'#B0A08A',
+          callbacks:{
+            label:ctx=>{const v=ctx.parsed.y,i=ctx.dataIndex+1;return v>=1000?`${(v/1000).toFixed(2)} Md€ — ${MDEALS[i]} deals`:`${v} M€ — ${MDEALS[i]} deals`;},
+            title:ctx=>[ctx[0].label+' 2026']
+          }
+        }
+      },
+      scales:{
+        x:{grid:{display:false},ticks:{font:{size:11},color:'#8C7A5E'}},
+        y:{grid:{color:'#E8DFD0'},ticks:{callback:v=>v>=1000?(v/1000).toFixed(1)+'Md':v+'M',color:'#B0A08A',font:{size:10}}}
+      },
+      onClick:(e,els)=>{
+        if(els.length){
+          const i=els[0].index+1;
+          const newM=i===aMonth?0:i;
+          aMonth=newM;
+          rebuildMonthPills();
+          renderAll(); updateChart();
+        }
+      }
+    }
+  });
 }
 
 function updateChart(){
-  if(!chart)return;
-  chart.data.datasets[0].backgroundColor=Object.keys(MONTH_META).map(k=>(!aMonth||aMonth===Number(k))?'#2563EB':'#BFDBFE');
+  if(!chart) return;
+  const fr_months=LANG.fr.months.slice(1);
+  chart.data.labels=T('months').slice(1);
+  chart.data.datasets[0].backgroundColor=fr_months.map((_,i)=>(!aMonth||aMonth===i+1)?'#C4973A':'#E8D5A3');
+  chart.options.plugins.tooltip.callbacks.title=ctx=>[ctx[0].label+' 2026'];
   chart.update();
 }
 
-function renderAll(){renderStats();renderGrid();updateChart();}
+// ── RENDER ALL ────────────────────────────────────────────
+function renderAll(){ renderStats(); renderGrid(); }
+
+// ── INIT ──────────────────────────────────────────────────
+document.getElementById('headerSub').textContent=T('subtitle');
+document.getElementById('langBtn').textContent=T('langBtn');
+document.getElementById('chartHead').textContent=T('chartTitle');
+document.getElementById('filterMonthLabel').textContent=T('filterMonth');
+
+rebuildMonthPills();
+rebuildDropdowns();
+
+document.getElementById('sectorF').onchange=e=>{aSec=e.target.value;renderAll();};
+document.getElementById('stageF').onchange=e=>{aStage=e.target.value;renderAll();};
+document.getElementById('regionF').onchange=e=>{aReg=e.target.value;renderAll();};
+document.getElementById('searchIn').oninput=e=>{aQ=e.target.value;renderAll();};
+
+initChart();
+renderAll();
 </script>
 </body>
 </html>

@@ -27,6 +27,11 @@ An interactive dashboard tracking French startup fundraising rounds in 2026, sou
         └── deploy.yml          # Auto-deploy to GitHub Pages on push
 ```
 
+## Dashboard Screenshot
+
+<img width="1920" height="3027" alt="image" src="https://github.com/user-attachments/assets/0aaf7f28-4c5b-4e33-8926-89319dc6f35c" />
+
+
 ## Adding a New Month
 
 1. Run the scraper (optional first pass):
